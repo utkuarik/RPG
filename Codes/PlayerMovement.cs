@@ -59,6 +59,7 @@ public class PlayerMovement : MonoBehaviour
             ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             if(Physics.Raycast(ray, out hit))
             {
+                nav.isStopped = false;
                 nav.destination = hit.point;
                 
             }
@@ -108,6 +109,7 @@ public class PlayerMovement : MonoBehaviour
         Debug.Log(CanAttack);
         CanAttack = false;
         anim.SetTrigger("attack");
+        nav.isStopped = true;
         StartCoroutine(ResetAttackCooldown());
 
     }
