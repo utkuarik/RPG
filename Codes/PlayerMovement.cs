@@ -22,7 +22,7 @@ public class PlayerMovement : MonoBehaviour
     private Vector3 currPos;
     public bool CanAttack;
     public bool IsAttacking;
-    public float AttackCoolDown;
+    private float AttackCoolDown;
     private Vector3 initialPos;
 
     // Start is called before the first frame update
@@ -34,9 +34,9 @@ public class PlayerMovement : MonoBehaviour
         currPos = ct.m_FollowOffset;
         initialPos = ct.m_FollowOffset;
         CanAttack = true;
-        AttackCoolDown = 4.0f;
+        AttackCoolDown = 1.4f;
         IsAttacking = false;
-    } 
+    }
 
 
     // Start is called before the first frame update
@@ -56,25 +56,50 @@ public class PlayerMovement : MonoBehaviour
 
         if (Input.GetMouseButtonDown(0) && playerInfo.IsTag("NonAttack"))
         {
+            nav.isStopped = true;
             ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            if(Physics.Raycast(ray, out hit))
+            if (Physics.Raycast(ray, out hit))
             {
                 nav.isStopped = false;
                 nav.destination = hit.point;
-                
+
             }
-            anim.SetBool("attack", false);
+             
+            anim.SetBool("running", true);
+            Debug.Log(currPos);
         }
 
         if (Input.GetMouseButton(1))
         {
-            if(pos.x !=0 || pos.y != 0 )
-            {   
+            anim.SetBool("running", false);
+            nav.isStopped = true;
+            IsAttacking = true;
+
+            /*if (pos.x != 0 || pos.y != 0)
+            {
 
                 currPos = initialPos;
 
                 Debug.Log(currPos);
+            }*/
+            ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            if (Physics.Raycast(ray, out hit))
+            {
+
+                nav.isStopped = true;
+                if (CanAttack)
+                {
+                    Debug.Log("canattack");
+                    SwordAttack();
+                    IsAttacking = false;
+
+                }
+
+                nav.isStopped = false;
+                nav.destination = hit.point;
+
             }
+
         }
 
 
@@ -85,29 +110,33 @@ public class PlayerMovement : MonoBehaviour
             {
                 Debug.Log(CanAttack);
                 SwordAttack();
-                
+
             }
-            
+
             //anim.SetBool("sprinting", false);
         }
 
-        
-
-        if (velocitySpeed != 0)
+        if (IsAttacking == true)
         {
-            anim.SetBool("sprinting", true);
+            anim.SetBool("running", false);
+        }
+
+        if (velocitySpeed != 0 && CanAttack == true)
+        {
+            anim.SetBool("running", true);
 
         }
-        if (velocitySpeed == 0)
+        if (velocitySpeed == 0 )
         {
-             anim.SetBool("sprinting", false);
+            anim.SetBool("running", false);
         }
-     }
-    
+    }
+
     public void SwordAttack()
     {
         Debug.Log(CanAttack);
         CanAttack = false;
+        IsAttacking = true;
         anim.SetTrigger("attack");
         nav.isStopped = true;
         StartCoroutine(ResetAttackCooldown());
@@ -121,6 +150,5 @@ public class PlayerMovement : MonoBehaviour
         anim.SetBool("attack", false);
         CanAttack = true;
         IsAttacking = false;
-        //gameObject.transform.position = v3_Original + new Vector3(3, 0, 0);
     }
 }
