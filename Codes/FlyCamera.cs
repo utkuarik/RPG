@@ -16,6 +16,12 @@ public class FlyCamera : MonoBehaviour
 
     void Update()
     {
+
+        if (Input.GetMouseButtonDown(2))
+        {
+            lastMouse = Input.mousePosition;
+            //Mouse  camera angle done.  
+        }
         if (Input.GetMouseButton(2))
         {
             lastMouse = Input.mousePosition - lastMouse;
