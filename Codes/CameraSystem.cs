@@ -38,6 +38,7 @@ namespace CodeMonkey.CameraSystem {
 
         private void Update() {
 
+            
             if (Input.GetMouseButton(0))
             {
                 manual_control = false;
@@ -45,6 +46,7 @@ namespace CodeMonkey.CameraSystem {
             if (Input.GetMouseButton(2))
             {
                 manual_control = true;
+                camera_system.transform.position = temp.transform.position;
             }
             Debug.Log(manual_control);
             if (manual_control == false)
@@ -67,7 +69,7 @@ namespace CodeMonkey.CameraSystem {
 
                 HandleCameraRotation();
 
-                //HandleCameraZoom_FieldOfView();
+                HandleCameraZoom_FieldOfView();
                 //HandleCameraZoom_MoveForward();
                 HandleCameraZoom_LowerY();
             }
@@ -87,7 +89,7 @@ namespace CodeMonkey.CameraSystem {
                 cinemachineVirtualCamera.m_LookAt = temp.transform;
                 cinemachineVirtualCamera.m_Follow = temp.transform;
                 cinemachineVirtualCamera.GetCinemachineComponent<CinemachineTransposer>().m_FollowOffset = new Vector3(0, 5, -10);
-                Debug.Log(cinemachineVirtualCamera.GetCinemachineComponent<CinemachineTransposer>().m_FollowOffset);
+                //sDebug.Log(cinemachineVirtualCamera.GetCinemachineComponent<CinemachineTransposer>().m_FollowOffset);
                 manual_control = false;
 
             }
@@ -99,7 +101,7 @@ namespace CodeMonkey.CameraSystem {
             Vector3 inputDir = new Vector3(0, 0, 0);
 
             if (Input.GetKey(KeyCode.W)) {
-                inputDir.z = +1;
+                inputDir.z = +1f;
                 cinemachineVirtualCamera.m_LookAt = camera_system.transform;
                 cinemachineVirtualCamera.m_Follow = camera_system.transform;
  
